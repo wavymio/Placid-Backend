@@ -13,7 +13,7 @@ const mySearchRoutes = require('./routes/searchRoutes')
 const connectToMongodb = require('./db/conncet')
 
 // Middleware Setup
-app.use(express.static(path.join(__dirname, '../Frontend/dist')))
+app.use(express.static(path.join(__dirname, '../../Frontend/dist')))
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true
