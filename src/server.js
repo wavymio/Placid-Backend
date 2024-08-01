@@ -2,18 +2,23 @@ const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv/config.js')
 const cookieParser = require('cookie-parser')
-const path = require('path')
+const {v2: cloudinary} = require('cloudinary')
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 const app = express()
 
 // Route Importation
 const myUserRoutes = require('./routes/myUserRoutes') 
-const mySearchRoutes = require('./routes/searchRoutes') 
+const searchRoutes = require('./routes/searchRoutes') 
+const userRoutes = require('./routes/userRoutes')
 
 // Database Connection
 const connectToMongodb = require('./db/conncet')
 
 // Middleware Setup
-app.use(express.static(path.join(__dirname, '../../Frontend/dist')))
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true
@@ -23,7 +28,8 @@ app.use(cookieParser())
 
 // Router Setup
 app.use('/api/my/user', myUserRoutes)
-app.use('/api/search', mySearchRoutes)
+app.use('/api/search', searchRoutes)
+app.use('/api/user', userRoutes)
 app.get('/health', async (req, res) => {
     res.status(200).json({ message: "I am healthy" })
 })
