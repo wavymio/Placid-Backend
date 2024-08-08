@@ -8,10 +8,11 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
-const app = express()
+const { app, server } = require('./socket/socket')
 
 // Route Importation
 const myUserRoutes = require('./routes/myUserRoutes') 
+const myNotificatonRoutes = require('./routes/myNotificationRoutes') 
 const searchRoutes = require('./routes/searchRoutes') 
 const userRoutes = require('./routes/userRoutes')
 
@@ -28,13 +29,14 @@ app.use(cookieParser())
 
 // Router Setup
 app.use('/api/my/user', myUserRoutes)
+app.use('/api/my/notifications', myNotificatonRoutes)
 app.use('/api/search', searchRoutes)
 app.use('/api/user', userRoutes)
 app.get('/health', async (req, res) => {
     res.status(200).json({ message: "I am healthy" })
 })
 
-app.listen(8080, () => {
-    connectToMongodb()
+server.listen(8080, async () => {
+    await connectToMongodb()
     console.log("App Connected Successfully on Port 8080")
 })
