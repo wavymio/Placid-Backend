@@ -108,6 +108,7 @@ const patchEditProfilePic = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
+    console.log("tried")
     try {
         const { userId } = req
         const user = await User.findById(userId)
