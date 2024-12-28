@@ -173,18 +173,18 @@ const verifyMyEmail = async (req, res) => {
     try {
         const { id: userId, token } = req.query
         const user = await User.findById(userId)
-
-        if (!user) return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/no-user`)
+        const domainRoute = `${process.env.FRONTEND_URL}/verification`
+        if (!user) return res.redirect(`${domainRoute}/failed/no-user`)
         // if (!user) return res.status(404).json({ erorr: "User not found" })
-        if (!token) return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/no-token`)
+        if (!token) return res.redirect(`${domainRoute}/failed/no-token`)
         // if (!token) return res.status(404).json({ error: "No available token" }) 
-        if (user.token && (user.tokenExpiryDate < Date.now())) return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/expired-token`)
+        if (user.token && (user.tokenExpiryDate < Date.now())) return res.redirect(`${domainRoute}/failed/expired-token`)
         // if (user.token && (user.tokenExpiryDate < Date.now())) return res.status(400).json({ error: "Token has Expired" })
-        if (user.token !== token) return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/fishy`)
+        if (user.token !== token) return res.redirect(`${domainRoute}/failed/fishy`)
         // if (user.token !== token) return res.status(400).json({ error: "Something fishy is going on here" })
 
         const emailExists = await User.findOne({ email: user.pendingEmail })
-        if (emailExists) return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/email-taken`)
+        if (emailExists) return res.redirect(`${domainRoute}/failed/email-taken`)
         // if (emailExists) return res.status(400).json({ error: "Sorry this email has just been taken" })
 
         user.email = user.pendingEmail
@@ -194,12 +194,12 @@ const verifyMyEmail = async (req, res) => {
         user.isVerified = true
 
         await user.save()
-        return res.redirect(`${process.env.FRONTEND_URL}/verification/successful`)
+        return res.redirect(`${domainRoute}/successful`)
         // return res.status(200).json({ success: "Email Verified!" })
 
     } catch (err) {
         console.log(err)
-        return res.redirect(`${process.env.FRONTEND_URL}/verification/failed/internal-server-error`)
+        return res.redirect(`${domainRoute}/failed/internal-server-error`)
     }
 }
 
