@@ -14,7 +14,9 @@ const userSchema = new mongoose.Schema({
         enum: ['Noob', 'Amateur', 'Pro', 'Legend'] 
     },
     email: { 
-        type: String 
+        type: String,
+        unique: true,
+        default: null 
     },
     name: { 
         type: String 
@@ -109,6 +111,22 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Video'
     }],
+    token: {
+        type: String,
+        default: null
+    },
+    tokenExpiryDate: {
+        type: Date,
+        default: null
+    }, 
+    pendingEmail: {
+        type: String,
+        default: null
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 })
 
 
